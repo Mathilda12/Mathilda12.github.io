@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="wireshark,nmap,流量分析,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="综述nmap 支持很多扫描技术，例如：UDP、TCP connect()、TCPSYN(半开扫描)、ftp代理(bounce攻击)、反向标志、ICMP、FIN、ACK扫描、圣诞树(Xmas Tree)、SYN扫描和null扫描。">
+<meta name="keywords" content="wireshark,nmap,流量分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nmap简单扫描模式的流量分析">
+<meta property="og:url" content="http://yoursite.com/2019/03/24/wireshark/index.html">
+<meta property="og:site_name" content="慈悲ciby&#39;blog">
+<meta property="og:description" content="综述nmap 支持很多扫描技术，例如：UDP、TCP connect()、TCPSYN(半开扫描)、ftp代理(bounce攻击)、反向标志、ICMP、FIN、ACK扫描、圣诞树(Xmas Tree)、SYN扫描和null扫描。">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/first.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/hack01.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/hack02.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/hack03.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/hack04.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/hack05.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/hack06.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/hack07.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/hack08.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/hack09.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/hack11.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/hack10.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/log02.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/log01.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/full01.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/full02.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/full03.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/full04.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/full05.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/log03.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/null01.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/null02.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/null03.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/null04.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/null05.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/null06.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/null09.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/null07.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/null08.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/fin01.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/fin02.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/fin04.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/fin03.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/fin05.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/fin06.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/xmas01.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/xmas02.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/xmas04.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/xmas03.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/xmas05.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/wireshark/xmas06.png">
+<meta property="og:updated_time" content="2019-03-24T06:26:09.412Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nmap简单扫描模式的流量分析">
+<meta name="twitter:description" content="综述nmap 支持很多扫描技术，例如：UDP、TCP connect()、TCPSYN(半开扫描)、ftp代理(bounce攻击)、反向标志、ICMP、FIN、ACK扫描、圣诞树(Xmas Tree)、SYN扫描和null扫描。">
+<meta name="twitter:image" content="http://yoursite.com/2019/03/24/wireshark/first.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/03/24/wireshark/">
+
+
+
+
+
+  <title>nmap简单扫描模式的流量分析 | 慈悲ciby'blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">慈悲ciby'blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">最是人间留不住，朱颜辞镜花辞树</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            Schedule
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/24/wireshark/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="慈悲ciby">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="慈悲ciby'blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">nmap简单扫描模式的流量分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-24T14:07:24+08:00">
+                2019-03-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h3><p>nmap 支持很多扫描技术，例如：UDP、TCP connect()、TCP<br>SYN(半开扫描)、ftp代理(bounce攻击)、反向标志、ICMP、FIN、ACK扫描、圣诞树(Xmas Tree)、SYN扫描和null扫描。<br><a id="more"></a><br>现在对一些常用nmap 命令进行无干扰情况下的分析，并对靶机系统日志进行一个分析。</p>
+<p><img src="/2019/03/24/wireshark/first.jpg" alt="总结"></p>
+<h4 id="nmap的默认扫描"><a href="#nmap的默认扫描" class="headerlink" title="nmap的默认扫描"></a>nmap的默认扫描</h4><p><em>攻击方(kali)IP地址：192.168.153.128</em></p>
+<p><em>靶机(centos)IP地址：192.168.153.100</em>  </p>
+<p>​    <em>防火墙状态：关闭</em></p>
+<p><em>使用命令 ： nmap 192.168.153.100 进行默认的主机扫描。</em></p>
+<h5 id="在攻击方系统（kali）的流量分析："><a href="#在攻击方系统（kali）的流量分析：" class="headerlink" title="在攻击方系统（kali）的流量分析："></a>在攻击方系统（kali）的流量分析：</h5><p><img src="/2019/03/24/wireshark/hack01.png" alt="攻击方电脑流量分析01"></p>
+<hr>
+<p><img src="/2019/03/24/wireshark/hack02.png" alt="攻击方电脑流量分析02"></p>
+<p>nmap 扫描结果：</p>
+<p><img src="/2019/03/24/wireshark/hack03.png" alt="扫描结果"></p>
+<hr>
+<p>发现靶机的 22 、111 、端口是开启的。</p>
+<p>添加过滤条件：ip.dst == 192.168.153.100 or 192.168.153.128 </p>
+<p><strong>流量特点：</strong></p>
+<ol>
+<li><p>可以看到这个命令对65535个端口中 2000 多个常见的端口进行了枚举扫描。</p>
+</li>
+<li><p>发包的大小 共有两种 以中国 60个字节 或者是 58 个字节。</p>
+</li>
+<li><p>这个命令kali 这边使用的相同的端口（60973）完成了对这2000 多个端口的扫描。</p>
+</li>
+<li><p>使用的协议的是tcp协议。</p>
+</li>
+<li><p>nmap 直接接IP地址爆破，这个IP地址开启的端口，采用的tcp 协议。他属于tcp syn扫描</p>
+</li>
+<li><p>这里分析到这个默认的扫描还是一个tcp 的 syn的半连接的扫描模式。</p>
+<p>添加过滤条件：ip.dst == 192.168.153.100 or 192.168.153.128 and tcp.port == 22 </p>
+<p><img src="/2019/03/24/wireshark/hack04.png" alt="tcp的syn半连接"></p>
+<p>源端口（kali）：60973         目标端口（靶机）：22</p>
+<p>nmap在对22 这个端口进行测试时，先发送了一个syn请求包，请求建立连接。</p>
+<blockquote>
+<p>具体syn包分析：</p>
+<p><img src="/2019/03/24/wireshark/hack05.png" alt></p>
+<p>标志位情况：</p>
+<p><img src="/2019/03/24/wireshark/hack06.png" alt></p>
+</blockquote>
+<p>然后，看到后面第245个数据包是靶机的22 端口对kali发送syn请求包的ack 确认回复包。这是tcp 三次握手的二步。</p>
+<p><img src="/2019/03/24/wireshark/hack07.png" alt></p>
+<p>最后nmap 的这个默认扫描方式是tcp syn的半连接扫面方式。所以这里在tcp 的最后一步kali是不会与靶机建立起连接的所以最后发送了一个RST，和靶机断开了连接。</p>
+<p><img src="/2019/03/24/wireshark/hack08.png" alt></p>
+<p>经过了上面的3个发包的过程kali 这边的nmap 程序，可以确认这个22端口是开启的了。</p>
+<p>相同的可以 111端口也是这种情况：(如图蓝色框中的3个包)</p>
+<p><img src="/2019/03/24/wireshark/hack09.png" alt></p>
+</li>
+<li><p>这种扫描方式。靶机的某个端口未打开的情况：</p>
+<p>kali发送一个syn请求包。</p>
+<p>靶机直接回复一个RST 包，断开连接。</p>
+<p>这种情况下可以nmap 程序可以判断这个端口是为关闭的</p>
+</li>
+<li><p>当靶机这边开启了防火墙的情况：</p>
+<p>靶机防火墙策略：</p>
+<p><img src="/2019/03/24/wireshark/hack11.png" alt></p>
+<p>nmap扫描结果：</p>
+<p><img src="/2019/03/24/wireshark/hack10.png" alt="扫描结果"></p>
+<p>22 端口在防火墙上是有放行的策略的</p>
+<p>当你nmap 进行端口扫描时，靶机的防火墙直接把未写规则放行的端口的数据包给丢弃。没有给任何的回包。</p>
+</li>
+</ol>
+<h5 id="靶机日志分析"><a href="#靶机日志分析" class="headerlink" title="靶机日志分析"></a>靶机日志分析</h5><p>​    通过对目标靶机的一些常见日志的分析：</p>
+<p>​    nmap 的半连接对系统端口的扫描一般不会记录。</p>
+<p>​    所以这中扫描的方式比较隐蔽。</p>
+<p>​    在日志上找不到相关的痕迹，我们可以通过相关的流量分析工具，发现与服务器连接上的异常，</p>
+<p>​    以此发现我们的服务器可能遭到了扫描。</p>
+<p>​    当开启防火墙，使用 watch -d -n1 cat /var/log/iptables.log 动态的查看防火墙的日志，依旧在系</p>
+<p>​    统上没有发现扫描的迹象。</p>
+<p>​    <img src="/2019/03/24/wireshark/log02.png" alt></p>
+<p>​    如果用linux 连接管理工具iftop ： 可以看到在一定时间内，网卡内的这两个IP的流量突然异常地</p>
+<p>​    大增：</p>
+<p>​    <img src="/2019/03/24/wireshark/log01.png" alt></p>
+<h4 id="nmap-的半连接扫描"><a href="#nmap-的半连接扫描" class="headerlink" title="nmap 的半连接扫描"></a>nmap 的半连接扫描</h4><p>情况基本同 nmap 的默认扫描</p>
+<p>命令：nmap -sS + ip地址</p>
+<h4 id="nmap-的全连接扫描"><a href="#nmap-的全连接扫描" class="headerlink" title="nmap 的全连接扫描"></a>nmap 的全连接扫描</h4><p><em>攻击方(kali)IP地址：192.168.153.128</em></p>
+<p><em>靶机(centos)IP地址：192.168.153.100</em>  </p>
+<p>​    <em>防火墙状态：关闭</em></p>
+<p><em>使用命令： nmap -sT 192.168.153.100</em></p>
+<p><em>nmap扫描结果如下：</em></p>
+<p><img src="/2019/03/24/wireshark/full01.png" alt></p>
+<p><em>wireshark 扫描结果</em></p>
+<p><em>添加过滤条件：ip.dst == 192.168.153.100 or 192.168.153.128</em> </p>
+<p><img src="/2019/03/24/wireshark/full02.png" alt></p>
+<p><img src="/2019/03/24/wireshark/full03.png" alt></p>
+<h5 id="在攻击方系统（kali）的流量分析：-1"><a href="#在攻击方系统（kali）的流量分析：-1" class="headerlink" title="在攻击方系统（kali）的流量分析："></a>在攻击方系统（kali）的流量分析：</h5><p><strong>流量特点</strong></p>
+<ol>
+<li><p>和nmap 的默认扫描的半连接扫描同样的，你在不指定端口的情况下，他自己会对在65535 个端口中挑选出了近1000多个常见的端口，进行枚举扫描。</p>
+</li>
+<li><p>nmap 发包的大小在 60 个字节和 80 个字节之间。</p>
+</li>
+<li><p>和tcp的半连接不同的是：tcp进行全连接会比半连接耗时更多。所以它采用用不同的端口对目标靶机的不同的端口进行扫描，这样就提高了效率。</p>
+</li>
+<li><p>根据扫描的结果，发现nmap -sT + ip地址对 目标进行端口枚举时，利用的tcp<strong>完整的</strong>3次握手，来判断目标端口是否是开启的。</p>
+<p>拿80端口来举例：</p>
+<p>添加过滤条件：ip.dst == 192.168.153.100 or ip.dst == 192.168.153.128  and tcp.port == 80 </p>
+<p><img src="/2019/03/24/wireshark/full04.png" alt></p>
+<p>从上图可以看出，这种类型的扫描，完成了tcp 三次握手的连接</p>
+<p>最后又kali 发送一个 RST 的连接重置的请求包断开了连接，经过这样一个过程，nmap这边判断80端口是开启的。</p>
+<p>同样的其他两个扫描出来的端口 22 和111 也是这个原理。</p>
+</li>
+<li><p>如果这个端口没开，则和tcp的半连接的原理一样，靶机这边直接回复RST拒绝连接。nmap 这边就认为这个端口是关闭的。</p>
+</li>
+<li><p>在防火墙开启的情况下：</p>
+<p><img src="/2019/03/24/wireshark/full05.png" alt></p>
+<p>目标靶机的防火墙：把端口都给屏蔽了。将kali nmap 扫描的请求包都给丢弃了，kali 这边收不到任何数据包的回应。</p>
+<p>并且kali这边会发送很多请求重传的数据包。</p>
+</li>
+</ol>
+<h5 id="靶机日志分析-1"><a href="#靶机日志分析-1" class="headerlink" title="靶机日志分析"></a>靶机日志分析</h5><p>​    nmap的全连接扫描建立起了一个完整的tcp ，并且通过kali这边通过发送 [RST] 数据包，来断开</p>
+<p>​    一个正常的连接，这非常占用网络带宽，并且在一些应用的日志上会有记录。</p>
+<p>​    在iftop流量分析中，可以看到突然一股异常的流量激增：</p>
+<p>​    <img src="/2019/03/24/wireshark/log03.png" alt></p>
+<p>​    上图的黑条代表的是从192.168.153.128 =&gt; 192.168.153.100 的流量，远远比自己回包的流量</p>
+<p>​    大。说明服务器可能正在经历扫描。</p>
+<h4 id="nmap-的反向扫描"><a href="#nmap-的反向扫描" class="headerlink" title="nmap 的反向扫描"></a>nmap 的反向扫描</h4><blockquote>
+<p>反向扫描原理</p>
+<p>是将一个没有设置任何标志位的数据包发送给TCP端口,在正常的通信中至少要设置一个标志位。</p>
+<p>根据FRC 793的要求,<strong>在端口关闭的情况</strong>下,若收到一个没有设置标志位的数据字段,那么主机应该舍弃这个分段,并发送一个RST数据包,否则不会响应发起扫描的客户端计算机。</p>
+<p>也就是说,如果TCP端口处于关闭则响应一个RST数据包,若处于开放则无相应。但是应该知道理由NULL扫描要求所有的主机都符合RFC 793规定,但是windows系统主机不遵从RFC 793标准,且只要收到没有设置任何标志位的数据包时,不管端口是处于开放还是关闭都响应一个RST数据包。但是基于Unix(<em>nix,如Linux)遵从RFC 793标准,所以可以用NULL扫描。   经过上面的分析,我们知道NULL可以辨别某台主机运行的操作系统是什么操作系统,是为windows呢?还是</em>nix?</p>
+</blockquote>
+<p><em>攻击方(kali)IP地址：192.168.153.128</em></p>
+<p><em>靶机(centos)IP地址：192.168.153.100</em>  </p>
+<p>​    <em>防火墙状态：关闭</em></p>
+<p><em>使用命令： nmap -sN 192.168.153.100</em> -p 1-200</p>
+<h5 id="在攻击方系统（kali）的流量分析：-2"><a href="#在攻击方系统（kali）的流量分析：-2" class="headerlink" title="在攻击方系统（kali）的流量分析："></a>在攻击方系统（kali）的流量分析：</h5><p><em>nmap扫描结果如下：</em></p>
+<p><img src="/2019/03/24/wireshark/null01.png" alt></p>
+<p>wireshark 流量</p>
+<p>添加过滤条件：ip.dst == 192.168.153.100 or ip.dst == 192.168.153.128</p>
+<p><img src="/2019/03/24/wireshark/null02.png" alt></p>
+<p><strong>流量特点</strong></p>
+<ol>
+<li><p>在这块网卡上发现大量的none 的数据包</p>
+</li>
+<li><p>数据包的大小在 50 - 60 之间。</p>
+</li>
+<li><p>nmap 的空扫描发送的扫描包里面的标志位都是 0 </p>
+<p><img src="/2019/03/24/wireshark/null03.png" alt></p>
+</li>
+<li><p>对于开放的端口，靶机是没有任何的数据回应的。</p>
+<p>例如：这里扫描到开放的端口：80</p>
+<p>filter：ip.dst == 192.168.153.128  ip.dst == 192.168.153.100 and tcp.port == 80 </p>
+<p><img src="/2019/03/24/wireshark/null04.png" alt></p>
+<p>因为了这样的扫描方式是不太准确的，所以nmap这里一共发送了三个探测包，以求提高它的准确性。</p>
+</li>
+<li><p>对于关闭的端口。根据RFC 793 标准，关闭的端口收到一个没有标志位的分段，会舍弃这个分段，并回应一个RST 包。</p>
+<p>例如：139 端口</p>
+<p><img src="/2019/03/24/wireshark/null05.png" alt></p>
+<p>53端口</p>
+<p><img src="/2019/03/24/wireshark/null06.png" alt></p>
+</li>
+<li><p>由于没有包含TCP 3次握手协议的任何部分,所以无法被记录下来,比半连接扫描更为隐蔽。能够躲避IDS、防火墙、包过滤器和日志审计系统。</p>
+</li>
+<li><p>缺点是这种扫描的不准确。</p>
+</li>
+<li><p>当靶机的防火墙开启的情况下：</p>
+<p>防火墙的策略如下：<br><img src="/2019/03/24/wireshark/null09.png" alt></p>
+<p>nmap扫描结果</p>
+<p><img src="/2019/03/24/wireshark/null07.png" alt></p>
+<p><img src="/2019/03/24/wireshark/null08.png" alt></p>
+<p>可以看到上图中，由于有防火墙的存在，nmap 的icmp 探测包全被防火墙挡住了。</p>
+<p>由防火墙的规则可以看到，我们并没有写 80 端口的放行策略。但用这种扫描检测到了 80 端口的开放。说明确实有绕过防火墙的作用。</p>
+<p>当时他的不准确性也确实体现出来了。原本开放的 111 端口没有检测出来。没有开放的端口 139，148 ，159 则被认为是开放的。</p>
+</li>
+</ol>
+<h5 id="靶机日志分析-2"><a href="#靶机日志分析-2" class="headerlink" title="靶机日志分析"></a>靶机日志分析</h5><p>​    </p>
+<p>​    因为这中扫描连一个完整的tcp连接都没有建立。传输的数据是传输层的数据，日志系统不会记录</p>
+<p>​    传输层的数据。所以在日志系统中难以检测到被这种扫描的痕迹。            </p>
+<p>​    </p>
+<h4 id="nmap-的FIN扫描"><a href="#nmap-的FIN扫描" class="headerlink" title="nmap 的FIN扫描"></a>nmap 的FIN扫描</h4><blockquote>
+<p>FIN 原理：</p>
+<p>与NULL有点类似,只是FIN为指示TCP会话结束,在FIN扫描中一个设置了FIN位的数据包被发送后,若响应RST数据包,则表示端口关闭,没有响应则表示开放。此类扫描同样不能准确判断windows系统上端口开发情况。</p>
+</blockquote>
+<p><em>攻击方(kali)IP地址：192.168.153.128</em></p>
+<p><em>靶机(centos)IP地址：192.168.153.100</em>  </p>
+<p>​    <em>防火墙状态：关闭</em></p>
+<p><em>使用命令： nmap -sF 192.168.153.100</em> -p 1-200</p>
+<h5 id="在攻击方系统（kali）的流量分析：-3"><a href="#在攻击方系统（kali）的流量分析：-3" class="headerlink" title="在攻击方系统（kali）的流量分析："></a>在攻击方系统（kali）的流量分析：</h5><p><em>nmap扫描结果如下：</em></p>
+<p><img src="/2019/03/24/wireshark/fin01.png" alt></p>
+<p>wireshark 流量如下：</p>
+<p><img src="/2019/03/24/wireshark/fin02.png" alt></p>
+<p><strong>流量特点：</strong></p>
+<ol>
+<li><p>这中扫描有两种数据包。一种是kali 发送的fin 数据包，数据报的大小是 54 个字节。另一个是目标靶机的RST 包，包的大小是60个字节。</p>
+</li>
+<li><p>这种扫描发送的fin包</p>
+<p><img src="/2019/03/24/wireshark/fin04.png" alt></p>
+</li>
+<li><p>端口开启的情况：例如 22 端口。</p>
+<p><img src="/2019/03/24/wireshark/fin03.png" alt></p>
+<p>nmap 发送一个 FIN 探测包，如果没有收到任何的回应，则判断这个端口是开放的。</p>
+</li>
+<li><p>端口关闭的情况：</p>
+<p><img src="/2019/03/24/wireshark/fin05.png" alt></p>
+<p>可以看到上图，如果端口是关闭的，对于一个FIN标志位为1的数据包，他会回应一个RST 的数据包。nmap 以此来判断这个端口是关闭的。</p>
+</li>
+<li><p>这中探测的方法和空扫描同样具有误差，不准确。如果在一定时间内没有得到回应，他会继续发送FIN 探测包，所以一共会发送4个探测包，以提升准确度。</p>
+</li>
+<li><p>防火墙开启的情况：</p>
+<p><img src="/2019/03/24/wireshark/fin06.png" alt></p>
+<p>在有防火墙的情况下判断是错误的。</p>
+<p>防火墙把端口都给屏蔽了。对于你发送的FIN数据包都不予与任何的回应。</p>
+</li>
+</ol>
+<h5 id="靶机日志分析-3"><a href="#靶机日志分析-3" class="headerlink" title="靶机日志分析"></a>靶机日志分析</h5><p>​    因为这中扫描连一个完整的tcp连接都没有建立。传输的数据是传输层的数据，日志系统不会记录</p>
+<p>​    传输层的数据。所以在日志系统中难以检测到被这种扫描的痕迹。</p>
+<h4 id="nmap-的Xmas-Tree扫描"><a href="#nmap-的Xmas-Tree扫描" class="headerlink" title="nmap 的Xmas-Tree扫描"></a>nmap 的Xmas-Tree扫描</h4><blockquote>
+<p>扫描原理：</p>
+<p>XMAS扫描原理和NULL扫描的类似,将TCP数据包中的ACK、FIN、RST、SYN、URG、PSH标志位置1后发送给目标主机。在目标端口开放的情况下,目标主机将不返回任何信息，反之端口看法国</p>
+</blockquote>
+<p><em>攻击方(kali)IP地址：192.168.153.128</em></p>
+<p><em>靶机(centos)IP地址：192.168.153.100</em>  </p>
+<p>​    <em>防火墙状态：关闭</em></p>
+<p><em>使用命令： nmap -sX 192.168.153.100</em> -p 1-200</p>
+<h5 id="在攻击方系统（kali）的流量分析：-4"><a href="#在攻击方系统（kali）的流量分析：-4" class="headerlink" title="在攻击方系统（kali）的流量分析："></a>在攻击方系统（kali）的流量分析：</h5><p>nmap 扫描结果：</p>
+<p><img src="/2019/03/24/wireshark/xmas01.png" alt></p>
+<p>wireshark 扫描结果：</p>
+<p>过滤条件：ip.dst == 192.168.153.128 or ip.dst == 192.168.153.100 </p>
+<p><img src="/2019/03/24/wireshark/xmas02.png" alt></p>
+<p><strong>流量特点</strong></p>
+<ol>
+<li><p>nmap 通过发送 [FIN,PSH,URG]包，来判断扫描的端口是否是开放的。</p>
+<p><img src="/2019/03/24/wireshark/xmas04.png" alt></p>
+</li>
+<li><p>发送的数据包的大小在 50 - 60 个字节之内。</p>
+</li>
+<li><p>在防火墙关闭的情况下。如果端口开放，如果收到[FIN,PSH,RRG] 的数据包。它不会做出任何的回应。</p>
+<p>例如：22 端口</p>
+<p><img src="/2019/03/24/wireshark/xmas03.png" alt></p>
+<p>nmap 发送了3次 [FIN,PSH,URG] 包，但是没有收到目标靶机的任何回包。</p>
+</li>
+<li><p>在防火墙开启的情况下，如果端口关闭，如果收到[FIN,PSH,RRG] 的数据包。它回应一个RST 的数据包。</p>
+<p>例如：139端口：</p>
+<p><img src="/2019/03/24/wireshark/xmas05.png" alt></p>
+</li>
+<li><p>在防火墙开启的情况下：</p>
+<p><img src="/2019/03/24/wireshark/xmas06.png" alt></p>
+<p>防火墙把端口都给屏蔽了。对于你发送的[FIN,PSH,URG]数据包都不予与任何的回应。</p>
+</li>
+</ol>
+<h5 id="靶机日志分析-4"><a href="#靶机日志分析-4" class="headerlink" title="靶机日志分析"></a>靶机日志分析</h5><p>​    因为这中扫描连一个完整的tcp连接都没有建立。传输的数据是传输层的数据，日志系统不会记录</p>
+<p>​    传输层的数据。所以在日志系统中难以检测到被这种扫描的痕迹。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/wireshark/" rel="tag"># wireshark</a>
+          
+            <a href="/tags/nmap/" rel="tag"># nmap</a>
+          
+            <a href="/tags/流量分析/" rel="tag"># 流量分析</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/19/kda/" rel="next" title="KD/A">
+                <i class="fa fa-chevron-left"></i> KD/A
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">慈悲ciby</p>
+              <p class="site-description motion-element" itemprop="description">everything for fun</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Mathilda12" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://laoxiajiadeyun.top" title="老夏家的博客" target="_blank">老夏家的博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#综述"><span class="nav-number">1.</span> <span class="nav-text">综述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#nmap的默认扫描"><span class="nav-number">1.1.</span> <span class="nav-text">nmap的默认扫描</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#在攻击方系统（kali）的流量分析："><span class="nav-number">1.1.1.</span> <span class="nav-text">在攻击方系统（kali）的流量分析：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#靶机日志分析"><span class="nav-number">1.1.2.</span> <span class="nav-text">靶机日志分析</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nmap-的半连接扫描"><span class="nav-number">1.2.</span> <span class="nav-text">nmap 的半连接扫描</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nmap-的全连接扫描"><span class="nav-number">1.3.</span> <span class="nav-text">nmap 的全连接扫描</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#在攻击方系统（kali）的流量分析：-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">在攻击方系统（kali）的流量分析：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#靶机日志分析-1"><span class="nav-number">1.3.2.</span> <span class="nav-text">靶机日志分析</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nmap-的反向扫描"><span class="nav-number">1.4.</span> <span class="nav-text">nmap 的反向扫描</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#在攻击方系统（kali）的流量分析：-2"><span class="nav-number">1.4.1.</span> <span class="nav-text">在攻击方系统（kali）的流量分析：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#靶机日志分析-2"><span class="nav-number">1.4.2.</span> <span class="nav-text">靶机日志分析</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nmap-的FIN扫描"><span class="nav-number">1.5.</span> <span class="nav-text">nmap 的FIN扫描</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#在攻击方系统（kali）的流量分析：-3"><span class="nav-number">1.5.1.</span> <span class="nav-text">在攻击方系统（kali）的流量分析：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#靶机日志分析-3"><span class="nav-number">1.5.2.</span> <span class="nav-text">靶机日志分析</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nmap-的Xmas-Tree扫描"><span class="nav-number">1.6.</span> <span class="nav-text">nmap 的Xmas-Tree扫描</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#在攻击方系统（kali）的流量分析：-4"><span class="nav-number">1.6.1.</span> <span class="nav-text">在攻击方系统（kali）的流量分析：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#靶机日志分析-4"><span class="nav-number">1.6.2.</span> <span class="nav-text">靶机日志分析</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">慈悲ciby</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
